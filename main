@@ -1,0 +1,83 @@
+MENU = {
+    "espresso": {
+        "ingredients": {
+            "water": 50,
+            "milk": 0,
+            "coffee": 18,
+        },
+        "cost": 1.5,
+    },
+    "latte": {
+        "ingredients": {
+            "water": 200,
+            "milk": 150,
+            "coffee": 24,
+        },
+        "cost": 2.5,
+    },
+    "cappuccino": {
+        "ingredients": {
+            "water": 250,
+            "milk": 100,
+            "coffee": 24,
+        },
+        "cost": 3.0,
+    }
+}
+
+resources = {
+    "water": 300,
+    "milk": 200,
+    "coffee": 100,
+}
+
+#deduct the resource by user's choice
+current_resource = resources
+
+def order():
+    """search the drink option in MENU and deduct the required ingredients from resource."""
+    statement = str()
+    current_resource["water"] -= MENU[option]["ingredients"]["water"]
+    current_resource["milk"] -= MENU[option]["ingredients"]["milk"]
+    current_resource["coffee"] -= MENU[option]["ingredients"]["coffee"]
+    for i in current_resource:
+        if current_resource[i] < 0:
+            print(f"The {i} is not enough for making a {option} in the machine.")
+            current_resource["water"] += MENU[option]["ingredients"]["water"]
+            current_resource["milk"] += MENU[option]["ingredients"]["milk"]
+            current_resource["coffee"] += MENU[option]["ingredients"]["coffee"]
+            break
+        else:
+            statement = f"Hers's your drink: {option}. \n"
+    print(statement)            
+
+#ask user to insert coin and check if it needs changes
+income = 0
+
+def money():
+    """calculate the inserted coins and give out the change"""
+    insert = float(input("Pls insert your coins: "))
+    change = insert - MENU[option]["cost"]
+    if change > 0:
+        print(f"Here's your change: {change}. \n")
+        order()
+        return income + MENU[option]["cost"]
+    else:
+        print(f"Your coins are not enough for a {option}. \n")
+
+
+
+#repeating the ordering function
+
+start = input("Do you want to order? (yes/no)? ")
+while start == "yes":
+    option = input("What would you like? (espresso/latte/cappuccino): ")
+    if option == "espresso" or option == "latte" or option == "cappuccino":
+        income = money()
+        current_resource["income"] = income
+    elif option == "report":
+        print(current_resource)
+    else:
+        break
+    start = input("Do you want to order? (yes/no)? ")
+
